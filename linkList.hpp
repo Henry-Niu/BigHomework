@@ -1,6 +1,7 @@
 #ifndef __linkList__
 #define __linkList__
 
+namespace bgh {
 
 template <class T>
 class linkList {
@@ -43,24 +44,24 @@ public:
 		iterator(node *_p): p(_p) {}
 		iterator(const iterator &other): p(other.p) {}
 		iterator operator ++ (int) {
-			if (p -> next == NULL) throw sjtu::invalid_iterator{};
+			if (p -> next == NULL) throw invalid_iterator{};
 			iterator tmp(*this);
 			p = p -> next;
 			return tmp;
 		}
-		iterator & operator ++ () {
-			if (p -> next == NULL) throw sjtu::invalid_iterator{};
+		iterator &operator ++ () {
+			if (p -> next == NULL) throw invalid_iterator{};
 			p = p -> next;
 			return *this;
 		}
 		iterator operator -- (int) {
-			if (p -> prev -> prev == NULL) throw sjtu::invalid_iterator{};
+			if (p -> prev -> prev == NULL) throw invalid_iterator{};
 			iterator tmp(*this);
 			p = p -> prev;
 			return *this;
 		}
 		iterator &operator--() {
-			if (p -> prev -> prev == NULL) throw sjtu::invalid_iterator{};
+			if (p -> prev -> prev == NULL) throw invalid_iterator{};
 			p = p -> prev;
 			return *this;
 		}
@@ -92,7 +93,6 @@ public:
 		const_iterator(): p(NULL) {}
 		const_iterator(const const_iterator &other): p(other.p) {}
 		const_iterator(const iterator &other): p(other.p) {}
-		
 		const_iterator(node *_p): p(_p) {}
 		
 		const T &operator * () const {
@@ -100,24 +100,24 @@ public:
 		}
 		
 		const_iterator operator ++ (int) {
-			if (p -> next == NULL) throw sjtu::invalid_iterator{};
+			if (p -> next == NULL) throw invalid_iterator{};
 			iterator tmp(*this);
 			p = p -> next;
 			return tmp;
 		}
-		const_iterator & operator ++ () {
-			if (p -> next == NULL) throw sjtu::invalid_iterator{};
+		const_iterator &operator ++ () {
+			if (p -> next == NULL) throw invalid_iterator{};
 			p = p -> next;
 			return *this;
 		}
 		const_iterator operator -- (int) {
-			if (p -> prev -> prev == NULL) throw sjtu::invalid_iterator{};
+			if (p -> prev -> prev == NULL) throw invalid_iterator{};
 			iterator tmp(*this);
 			p = p -> prev;
 			return *this;
 		}
 		const_iterator &operator -- () {
-			if (p -> prev -> prev == NULL) throw sjtu::invalid_iterator{};
+			if (p -> prev -> prev == NULL) throw invalid_iterator{};
 			p = p -> prev;
 			return *this;
 		}
@@ -140,30 +140,11 @@ public:
 	};
 	
 	void clear();
-	iterator insert(int x, const T &a) {
-		if (x < 0 || x > curSize) throw outOfBound{};
-		node *p = move(x), *q = p -> next;
-		p -> next = q -> prev = new node (a, p, q);
-		++curSize; 
-		return iterator(p -> next);
-	}
-	iterator preInsert(iterator pre, const T &a) {
-		node *p = pre.p;
-		if (p == NULL) throw sjtu::invalid_iterator{};
-		p -> prev = new node(a, p -> prev, p);
-		p -> prev -> prev -> next = p -> prev;
-		++curSize;
-		return iterator(p -> prev);
-	}
 	
-	iterator sufInsert(iterator suf, const T &a) {
-		node *p = suf.p;
-		if (p == NULL) throw sjtu::invalid_iterator{};
-		p -> next = new node(a, p, p -> next);
-		p -> next -> next -> prev = p -> next;
-		++curSize;
-		return iterator(p -> next);
-	}
+	iterator insert(int x, const T &a);
+	iterator preInsert(iterator pre, const T &a);
+	iterator sufInsert(iterator suf, const T &a);
+	
 	void preRemove(iterator it);
 	void sufRemove(iterator it);
 	void remove(int x);
@@ -254,4 +235,36 @@ void linkList<T>::preRemove(iterator it) {
 	--curSize;
 	delete tmp;
 }
+
+template<class T>
+iterator linkList<T>::insert(int x, const T &a) {
+	if (x < 0 || x > curSize) throw outOfBound{};
+	node *p = move(x), *q = p -> next;
+	p -> next = q -> prev = new node (a, p, q);
+	++curSize; 
+	return iterator(p -> next);
+}
+
+template<class T>
+iterator preInsert(iterator pre, const T &a) {
+	node *p = pre.p;
+	if (p == NULL) throw invalid_iterator{};
+	p -> prev = new node(a, p -> prev, p);
+	p -> prev -> prev -> next = p -> prev;
+	++curSize;
+	return iterator(p -> prev);
+}
+
+template<class T>
+iterator sufInsert(iterator suf, const T &a) {
+	node *p = suf.p;
+	if (p == NULL) throw sjtu::invalid_iterator{};
+	p -> next = new node(a, p, p -> next);
+	p -> next -> next -> prev = p -> next;
+	++curSize;
+	return iterator(p -> next);
+}
+
+}
+
 #endif
