@@ -164,6 +164,36 @@ protected:
 		if (succ) succ -> prev = x;
 	}
 	
+	node *_lower_bound(const Key &key) const {
+		node *p = root, res = NULL;
+		Compare cmp;
+		
+		while (p) {
+			if (cmp(p -> value -> first, key)) p = p -> ch[1];
+			else {
+				res = p;
+				p = p -> ch[0];
+			}
+		}
+		
+		return res;
+	}
+	
+	node *_upper_bound(const Key &key) const {
+		node *p = root, res = NULL;
+		Compare cmp;
+		
+		while (p) {
+			if (cmp(key , p -> value -> first)) {
+				res = p;
+				p = p -> ch[0];
+			}
+			else p = p -> ch[1];
+		}
+		
+		return res;
+	}
+	
 public:
 
 	class const_iterator;
@@ -275,6 +305,7 @@ public:
 		head -> succ = tail;
 		tail -> prev = head;
 		curSize = 0;
+		
 	}
 	RB_Tree(const RB_Tree &other) {
 		node **list = new node* [other.size()];
@@ -409,6 +440,26 @@ public:
 		head -> succ = tail;
 		tail -> prev = head;
 		curSize = 0;
+	}
+	
+	iterator lower_bound(const Key &key) const {
+		node *p = _lower_bound(key);
+		return p == NULL ? end() : iterator(p);
+	}
+	
+	const_iterator lower_bound(const Key &) const {
+		node *p = _lower_bound(key);
+		return p == NULL ? cend() : const_iterator(p);
+	}
+	
+	iterator upper_bound(const Key &key) const {
+		node *p = _upper_bound(key);
+		return p == NULL ? end() : iterator(p);
+	}
+	
+	const_iterator upper_bound(const Key &key) const {
+		node *p = _upper_bound(key);
+		return p == NULL ? cend() : const_iterator(p);
 	}
 };
 
