@@ -43,7 +43,7 @@ public:
 	bool empty() const { return this -> root == NULL; }
 	
 	size_t count(const Key &key) const { return this ->_checkFindRes(this -> _find(key)) ? 1 : 0; }
-
+	
 };
 
 }
