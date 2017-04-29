@@ -28,14 +28,14 @@ protected:
 		~node(){delete value;}
 	}*root, *head, *tail;
 	
-	int curSize;
+	size_t curSize;
 	
 	int& _color(node *p) const {
 		nullPtr = B;
 		return p == NULL ? nullPtr : p -> color;
 	}
 
-	node *_copy(node *cur, node *list[], int &len) {
+	node *_copy(node *cur, node *list[], size_t &len) {
 		if (cur == NULL) return NULL;
 		node *p = new node(*cur -> value, NULL, NULL, NULL, cur -> color);
 		p -> ch[0] = _copy(cur -> ch[0], list, len);
@@ -46,9 +46,16 @@ protected:
 		return p;
 	}
 	
-	void _buildSeq(node *list[], int len) {
+	void _buildSeq(node *list[], size_t len) {
 		if (!len) return;
 		for (int i = len - 1; i >= 0; i--) {
+			_updateLink(list[i], head, head -> succ);
+		}
+	}
+	
+	void _buildSeq(vector<node *> list) {
+		if (list.size() == 0) return;
+		for (int i = list.size() - 1; i >= 0; i--) {
 			_updateLink(list[i], head, head -> succ);
 		}
 	}
