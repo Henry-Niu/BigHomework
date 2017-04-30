@@ -1,7 +1,7 @@
 #ifndef __RB_TREE_HPP__
 #define __RB_TREE_HPP__
 
-namespace bgh {
+#include "exceptions.hpp"
 
 const int B = 1, R = 4, RB = 2,  BB = 3;
 int nullPtr;
@@ -79,7 +79,7 @@ protected:
 		node *son = x -> ch[b];
 		_matchPntChild(z, x, z ? (z -> ch[1] == y) : -1);
 		_matchPntChild(x, y, b);
-		_matchPntChild(y, son, !b)
+		_matchPntChild(y, son, !b);
 	}
 
 	pair<node *, bool> _find(const Key &k) const {
@@ -172,7 +172,7 @@ protected:
 	}
 	
 	node *_lower_bound(const Key &key) const {
-		node *p = root, res = NULL;
+		node *p = root, *res = NULL;
 		Compare cmp;
 		
 		while (p) {
@@ -187,7 +187,7 @@ protected:
 	}
 	
 	node *_upper_bound(const Key &key) const {
-		node *p = root, res = NULL;
+		node *p = root, *res = NULL;
 		Compare cmp;
 		
 		while (p) {
@@ -449,17 +449,17 @@ public:
 		curSize = 0;
 	}
 	
-	iterator lower_bound(const Key &key) const {
+	iterator lower_bound(const Key &key) {
 		node *p = _lower_bound(key);
 		return p == NULL ? end() : iterator(p);
 	}
 	
-	const_iterator lower_bound(const Key &) const {
+	const_iterator lower_bound(const Key &key) const {
 		node *p = _lower_bound(key);
 		return p == NULL ? cend() : const_iterator(p);
 	}
 	
-	iterator upper_bound(const Key &key) const {
+	iterator upper_bound(const Key &key) {
 		node *p = _upper_bound(key);
 		return p == NULL ? end() : iterator(p);
 	}
@@ -469,7 +469,5 @@ public:
 		return p == NULL ? cend() : const_iterator(p);
 	}
 };
-
-}
 
 #endif

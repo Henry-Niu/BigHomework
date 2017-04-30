@@ -1,6 +1,9 @@
 #ifndef __MAP_HPP__
 #define __MAP_HPP__
 
+#include "RB_Tree.hpp"
+#include <fstream>
+
 template<
 	class Key,
 	class T,
@@ -53,17 +56,17 @@ template<
 private:
 
 	typedef pair<const Key, int> value_type;
-	typedef typename RB_Tree<Key, T, Compare>::node node;
+	typedef typename RB_Tree<Key, int, Compare>::node node;
 	typedef pair<value_type, int> pir;
 
-	void _inTree(ifstream &fin, node &(*p), node *pnt, vector<node *> &list) {
+	void _inTree(ifstream &fin, node *(&p), node *pnt, vector<node *> &list) {
 		pir nod;
-		fin.read(reinterpret_cast <char *> (&nod), sizeof(nod));
+		fin.read(reinterpret_cast <char *> (&nod), sizeof(pir));
 		if (nod.first.second == -1) p = NULL;
 		else {
 			p = new node(nod -> first);
 			_inTree(fin, p -> ch[0], p, list);
-			list.push_back(p)
+			list.push_back(p);
 			_inTree(fin, p -> ch[1], p, list);
 			p -> pnt = pnt;
 			p -> color = nod -> second;
@@ -78,7 +81,7 @@ private:
 			return;
 		}
 		nod = {*(p -> value), p -> color};
-		fout.write(reinterpret_cast <const char *> (&nod) sizeof(nod));
+		fout.write(reinterpret_cast <const char *> (&nod), sizeof(nod));
 		_outTree(fout, p -> ch[0]);
 		_outTree(fout, p -> ch[1]);
 	}
