@@ -41,21 +41,21 @@ void buildTrain(char *inFile, map<QueryInformation, int> &mp) {
 /** wtl
   * 修改票数，先找到在文件里的位置，读入车，修改，输出到文件
 */
-void modifyTicket(string start, string target, string id, const Date &date) {
+void modifyTicket(const string &start, const string &target, const string &trainNum, const Date &date, TMAP &trainMap) {
 	
 }
 
 /** wtl
   * 插入
 */
-void insert(const Train &nod) {
+void insert(const Train &nod, TMAP &trainMap) {
 	
 }
 
 /**
   * 删除
 */
-void erase(const Train &nod) {
+void erase(const Train &nod, TMAP &trainMap) {
 	
 }
 
